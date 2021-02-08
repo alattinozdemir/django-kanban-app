@@ -1,0 +1,47 @@
+{% extends "home/layout.html" %}
+{% block body%}
+{% load crispy_forms_tags %}
+<div class="row">
+    {%if request.user.is_superuser%}
+    <div class="col-md-6 offset-md-3">
+
+        <h3>Departmanlar</h3>
+        <hr>
+        <form method="post">
+            {% csrf_token %}
+
+            {{form|crispy}}
+            <br>
+            <a class="btn btn-danger" href="/adddepartments">Departman Ekle</a>
+        </form>
+        <hr>
+        <table class="table">
+            <thead>
+            <tr>
+
+                <th scope="col">Departman Adı</th>
+                <th scope="col">Güncelle</th>
+                <th scope="col">Sil</th>
+            </tr>
+            </thead>
+            <tbody>
+            {%for department in departments%}
+            <tr>
+
+                <td>{{department.department_name}}</td>
+                <td><a href="/articles/update/{{department.id}}" class="btn btn-danger">Güncelle</a></td>
+                <td><a href="/department_delete/{{department.id}}" class="btn btn-danger">Sil</a></td>
+            </tr>
+            {%endfor%}
+
+            </tbody>
+        </table>
+
+        <div class="alert alet-danger"></div>
+
+    </div>
+    {%else%}
+    <div class="alert alert-danger"> Bu alana giris yetkiniz yok!</div>
+</div>
+{%endif%}
+{% endblock body%}

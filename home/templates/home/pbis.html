@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+{% extends "home/layout.html" %}
+{% block body%}
+{% load crispy_forms_tags %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+.pagination a {
+display:inline-block;
+margin-right:5px;
+color: gray;
+
+}
+
+
+
+</style>
+<script type="text/javascript">
+
+function date_time_pcker(date_text_id)
+{
+
+        $(date_text_id).prop("readonly", true);
+        $(date_text_id).datepicker({
+        dateFormat: 'dd/mm/yy',
+        monthNames: [ "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık" ],
+        dayNamesMin: [ "Pa", "Pt", "Sl", "Ça", "Pe", "Cu", "Ct" ],
+        firstDay:1
+
+         });
+}
+function AcPopup() {
+
+            var left = (screen.width / 2) - (300);
+            var top = (screen.height / 2) - (300);
+            popup = window.open("{% url 'sprint_gecisi' %}", "MsgWindow", 'width=500,height=150,  top=' + top + ', left=' + left);
+            popup.focus();
+
+
+        }
+
+var scroll="";
+  $(document).ready(function(){
+
+
+       date_time_pcker("#id_workorder_date")
+       date_time_pcker("#id_start_date")
+       date_time_pcker("#id_finish_date")
+       date_time_pcker("#id_actual_date")
+        $("#div_update_form").hide();
+        // code to read selected table row cell data (values).
+        $("body").on('click','#btnSelect',function(){
+             if($('#div_update_form').is(':visible') && $("#updatepbiButton").val()==$(this).attr('value'))
+             {
+               $('#div_update_form').hide();
+             }
+            else
+             {
+                 var currentRow=$(this).closest("tr");
+                 var col1=currentRow.find("td:eq(1)").text(); // get current row 1st TD value
+                 var col2=currentRow.find("td:eq(2)").text(); // get current row 2nd TD
+                 var col3=currentRow.find("td:eq(3)").text(); // get current row 3rd TD
+                 var col4=currentRow.find("td:eq(4)").text(); // get current row 3rd TD
+                 var col5=currentRow.find("td:eq(5)").text(); // get current row 3rd TD
+                 var col6=currentRow.find("td:eq(6)").text(); // get current row 3rd TD
+                 var col7=currentRow.find("td:eq(7)").text(); // get current row 3rd TD
+                 var col8=currentRow.find("td:eq(8)").text(); // get current row 3rd TD
+                 var col9=currentRow.find("td:eq(9)").text(); // get current row 3rd TD
+
+                 var tr_value_for_en_index=currentRow.attr('value');
+
+
+                 var data=col1+"\n"+col2+"\n"+col3+"\n"+currentRow[0];
+                 scroll = $(window).scrollTop();
+                 $("#updatepbiButton").val($(this).attr('value'));
+                 $("#id_department option").each(function() {
+                  if($(this).text() == col1) {
+                     $(this).prop("selected", true);
+                    }
+                  });
+                 $("#id_end_day_index option").each(function() {
+                     if($(this).text() == tr_value_for_en_index) {
+                     $(this).prop("selected", true);
+                    }
+                  });
+                 $("#id_sprint").val(col2);
+                 $("#id_pbi_type option").each(function() {
+                    if($(this).text() == col3) {
+                     $(this).prop("selected", true);
+                    }
+                  });
+                 $("#id_pbi").val(col4);
+                 $("#id_classficition").val(col5);
+                 $("#id_workorder_date").val(col6);
+                 $("#id_start_date").val(col7);
+                 $("#id_finish_date").val(col8);
+                 $("#id_actual_date").val(col9);
+                 $('#div_update_form').show();
+
+              }
+         });
+
+
+
+  // $tr=$('#example tr');
+//pagination();
+
+//$('.pagination li:first').trigger('click');
+
+
+});
+
+click_index=0;
+ajax_response=0;
+$(document).ajaxComplete(function () {
+
+
+        //$( ".pagination" ).empty();
+       //$( "#liste" ).append('<ul class="pagination"></ul>');
+        ajax_response=1;
+      //  pagination();
+        $('.pagination li:first').trigger('click');
+
+
+});
+function anima()
+{
+
+    if($('#div_update_form').is(':visible'))
+    {
+       $('#div_update_form').hide();
+    }
+    $("html, body").animate({ scrollTop: scroll });
+    $( "#div_list_pbis" ).empty();
+}
+
+function pagination(){
+        sayi=1;
+		var req_num_row=5;
+
+		 $tr=$('#example tr');
+
+		var total_num_row=$tr.length;
+         //alert(total_num_row);
+
+
+		var num_pages=0;
+		if(total_num_row % req_num_row ==0){
+			num_pages=total_num_row / req_num_row;
+		}
+		if(total_num_row % req_num_row >=1){
+			num_pages=total_num_row / req_num_row;
+			num_pages++;
+			num_pages=Math.floor(num_pages++);
+		}
+
+		$('.pagination').append('<li class="page-item"><a class="page-link" href="#" tabindex="-1">Previous</a></li>');
+		for(var i=1; i<=num_pages; i++){
+            if(i==1)
+            {
+			$('.pagination').append('<li class="page-item active "><a class="page-link" href="#"> '+i+' </a></li>');
+			}
+			else
+			{
+			    $('.pagination').append('<li class="page-item "><a class="page-link" href="#"> '+i+' </a></li>');
+			}
+		}
+		$('.pagination').append('<li class="page-item"><a class="page-link" href="#"> Next </a></li>');
+		$tr.each(function(i){
+
+			$(this).hide();
+			if(i+1 <= req_num_row){
+				$tr.eq(i).show();
+				//alert(i);
+			}
+
+		});
+
+		$("body").on('click','.pagination li',function(e){
+
+                $tr=$('#example tr');
+                if(ajax_response==1)
+                {
+                   tiklanan_li=click_index;
+                }
+                    else
+                {
+                    tiklanan_li=$(this).text();
+                }
+                ajax_response=0;
+
+
+
+              $('.pagination li').each(function(i)
+              {
+                //alert($(this).text()+tiklanan_li);
+                if (i==tiklanan_li )
+                {
+                    sayi=i;
+                    $(this).addClass("page-item active");
+
+                    e.preventDefault();
+			        $tr.hide();
+			        var page=tiklanan_li;
+			        var temp=page-1;
+			        var start=temp*req_num_row;
+
+                    $tr.eq(0).show();
+			        for(var k=0; k< req_num_row; k++)
+			        {
+
+				        $tr.eq(start+k).show();
+
+			        }
+
+              }else if(tiklanan_li==" Next ")
+              {
+                     if(sayi<num_pages)
+                      {
+                         sayi=sayi+1;
+                         i=sayi;
+                         tiklanan_li=i;
+
+                      }
+
+               }else if(tiklanan_li=="Previous")
+               {
+                    if(sayi>1)
+                      {
+                         sayi=sayi-1;
+                         i=sayi;
+                         tiklanan_li=i;
+                      }
+               }
+               else
+               {
+                    $(this).removeClass();
+                    $(this).addClass("page-item");
+                    $('this').append('<li class="page-item"><a class="page-link" href="#"> '+i+' </a></li>');
+               }
+
+
+
+             });
+
+ click_index=sayi;
+
+
+		});
+
+}
+
+
+</script>
+<body>
+<div class="form-group">
+        <div  class="float-right">
+    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal" data-whatever="">Sprint Geçişi</button>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Sprint Geçişi</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Sprint Geçişi Yapılacak Sprint:</label>
+            <select class="form-control" id="db_for_sprint_gecisi">
+                <option value="" selected disabled>Sprint Seçiniz</option>
+
+                {% for sprint in my_sprint_list %}
+                <option value="{{sprint.sprint}}">{{sprint.sprint}}</option>
+                {%endfor%}
+
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="message-text" class="col-form-label">Yeni Sprint Seçiniz:</label>
+             <select class="form-control" id="db_for_sprint_gecisi_yeni">
+                <option value="" selected disabled>Yeni Sprint Seçiniz</option>
+
+                {% for sprint in my_sprint_list_new %}
+                <option value="{{sprint}}">{{sprint}}</option>
+                {%endfor%}
+
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button"   class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+        <button type="button" id="mod_button" class="btn btn-secondary">Sprint Geçişini Yap</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+        <!--<a href="#"  class="btn btn-secondary" onclick=javascript:AcPopup();>Sprint Geçişi</a> -->
+        </div>
+    </div>
+
+<div class="row" id="liste">
+
+    <div class="form-group">
+
+        <select class="form-control" id="exampleFormControlSelect1">
+            <option value="" selected disabled>Departman Seçiniz</option>
+            {% for department in department_list %}
+            <option value="{{department.id}}">{{department.department_name}}</option>
+            {%endfor%}
+        </select>
+         </div>
+     <div class="form-group">
+        <select class="form-control" id="exampleFormControlSelect2">
+            <option value="" selected disabled>Sprint Seçiniz</option>
+            {% for sprint in my_sprint_list %}
+            <option value="{{sprint.sprint}}">{{sprint.sprint}}</option>
+            {%endfor%}
+        </select>
+    </div>
+
+    <ul class="pagination">
+    </ul>
+
+</div>
+
+<div class="col-md-6 offset-md-3" id="div_update_form">
+    <form method="post" id="PbiUpdateForm">
+        {% csrf_token %}
+        <table>{{ form.as_table }}</table>
+        <br>
+        <button type="button" class="btn btn-danger" id="updatepbiButton" onclick=anima()>Update</button>
+    </form>
+    <br>
+
+</div>
+
+
+<div class="row" id="div_list_pbis">
+
+
+    <table id="example" class="table table-striped table-bordered table-sm" style="width:100%; font-size: 13px;">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Department</th>
+            <th>Sprint</th>
+            <th>Type</th>
+            <th>PBI</th>
+            <th>Classification</th>
+            <th>Workorder Date</th>
+            <th>Start Date</th>
+            <th>Finish Date</th>
+            <th>Actual Date</th>
+            <th>Update</th>
+            <th>Delete</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        {% for pbi in all_pbis %}
+
+        <tr value={{pbi.end_day_index}}>
+            <td class="align-middle" bgcolor=
+                    {%if pbi.end_day_index == '3' %}
+                         red
+                      {% elif pbi.end_day_index == '5' %}
+                          orange
+                      {% else %}
+                        yellow
+                       {% endif %}
+            >{{pbi.id}}</td>
+            <td class="align-middle" value={{pbi.end_day_index}}>{{pbi.department.department_name}}</td>
+            <td class="align-middle">{{pbi.sprint}}</td>
+            <td class="align-middle">{{pbi.pbi_type}}</td>
+            <td class="align-middle">{{pbi.pbi}}</td>
+            <td class="align-middle">{{pbi.classficition}}</td>
+            <td class="align-middle">{{pbi.workorder_date|date:"d/m/Y"}}</td>
+            <td class="align-middle">{{pbi.start_date|date:"d/m/Y"}}</td>
+            <td class="align-middle">{{pbi.finish_date|date:"d/m/Y"}}</td>
+            <td class="align-middle">{{pbi.actual_date|date:"d/m/Y"}}</td>
+
+            <td class="align-middle"><a href="#"  class="btn btn-dark" id="btnSelect" value={{pbi.id}}>Update</a>
+            </td>
+            <td class="align-middle"><a href="#" class="btn btn-dark" id="btnDelete" value={{pbi.id}}>Delete</a>
+            </td>
+
+        </tr>
+
+        {%endfor%}
+        </tbody>
+    </table>
+
+</div>
+
+
+</body>
+</html>
+{% endblock body%}

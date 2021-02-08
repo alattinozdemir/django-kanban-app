@@ -1,0 +1,23 @@
+{% extends "home/layout.html" %}
+{% block body%}
+{% load crispy_forms_tags %}
+
+<div class="col-md-6 offset-md-3">
+    <h3>Giriş yap</h3>
+    <hr>
+    <form method="post" id="LoginForm">
+        {% csrf_token %}
+        <table>{{ form.as_table }}</table>
+        <br>
+        <button type="button" class="btn btn-danger" id="loginButton">Giriş Yap</button>
+    </form>
+    <hr>
+    <div class="container" style="margin-bottom:100px;">
+        <div id="loginresult" class="row"></div>
+
+    </div>
+</div>
+</div>
+
+
+{% endblock body%}

@@ -1,0 +1,54 @@
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <a class="navbar-brand" href="{% url 'index' %}">KANBAN</a>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+            aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'pbis' %}">PBIs</a>
+            </li>
+          <!--  <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false" style="color:white">
+                    Rapor
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="{% url 'report' %}">Action</a>
+                    <a class="dropdown-item" href="#">Another action</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">Something else here</a>
+                </div>
+            </li>-->
+             <li class="nav-item active">
+                <a class="nav-link" href="{% url 'report' %}">Rapor</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'add_pbi' %}">PBI İşlemleri</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'departments' %}">Departman İşlemleri</a>
+            </li>
+             {%if request.user.is_authenticated%}
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'logoutuser' %}">Çıkış Yap</a>
+
+            </li>
+            <li class="nav-item active">
+                <div  class="nav-link" style="font-size: 14px; 'text-align: center; ">{{request.user.username}}</div>
+            </li>
+            {%else%}
+
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'login' %}"> Giriş Yap</a>
+            </li>
+             {%endif%}
+
+        </ul>
+    </div>
+
+</nav>

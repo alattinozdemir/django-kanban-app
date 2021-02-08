@@ -1,0 +1,55 @@
+{% extends "home/layout.html" %}
+{% block body%}
+{% load crispy_forms_tags %}
+<style>
+
+
+
+</style>
+<script>
+function date_time_pcker(date_text_id)
+{
+
+        $(date_text_id).prop("readonly", true);
+        $(date_text_id).datepicker({
+        dateFormat: 'dd/mm/yy',
+        monthNames: [ "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık" ],
+        dayNamesMin: [ "Pa", "Pt", "Sl", "Ça", "Pe", "Cu", "Ct" ],
+        firstDay:1
+
+         });
+}
+$(document).ready(function(){
+
+       date_time_pcker("#id_workorder_date")
+       date_time_pcker("#id_start_date")
+       date_time_pcker("#id_finish_date")
+       date_time_pcker("#id_actual_date")
+
+});
+
+</script>
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <h3>PBI Ekle</h3>
+        <hr>
+        <form method="post" id="AddPbiForm">
+            {% csrf_token %}
+
+            <table>
+
+                {{ form.as_table }}
+            </table>
+            <br>
+            <button type="button" class="btn btn-danger" id="addpbiButton">PBI Ekle</button>
+        </form>
+        <hr>
+        <div id="pbiresult" class="row">
+
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock body%}

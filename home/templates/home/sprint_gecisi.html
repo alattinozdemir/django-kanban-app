@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <title>Title</title>
+    <script src="{% static 'js/jquery-3.5.1.min.js'%}"></script>
+    <script src="{% static 'js/todo.js'%}"></script>
+
+</head>
+<body>
+<div class="container" style="margin-bottom:100px;">
+    <div class="row">
+        <div class="form-group">
+
+            <select class="form-control" id="db_for_sprint_gecisi">
+                <option value="" selected disabled>Sprint Seçiniz</option>
+
+                {% for sprint in my_sprint_list %}
+                <option value="{{sprint.sprint}}">{{sprint.sprint}}</option>
+                {%endfor%}
+
+            </select>
+            <br>
+            <div class="input-group mb-3">
+               <select class="form-control" id="db_for_sprint_gecisi_yeni">
+                <option value="" selected disabled>Yeni Sprint Seçiniz</option>
+
+                {% for sprint in my_sprint_list_new %}
+                <option value="{{sprint}}">{{sprint}}</option>
+                {%endfor%}
+
+            </select>
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" id="btnSprintGecisi" type="button">Sprint Geçişi Yap
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+</html>
